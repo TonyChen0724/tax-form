@@ -10,6 +10,11 @@ export class TaxDetails extends React.Component {
             selectedCountries: [],
 
         };
+
+        this.setTaxResident = (event) => {
+            console.log(event.target.value);
+            this.state.isTaxResident = event.target.value;
+        }
     }
 
     componentDidMount() {
@@ -31,6 +36,10 @@ export class TaxDetails extends React.Component {
 
         return <div>
             <p>Are you a tax resident: </p>
+            <div onChange={this.setTaxResident.bind(this)}>
+                <input type="radio" value="Yes" name="taxresident"/> Yes
+                <input type="radio" value="No" name="taxresident"/> No
+            </div>
             {this.state.isTaxResident ? <p>Yes</p> : <p>No</p>}
             {this.state.selectedCountries.map((country, index) => {
                 return (

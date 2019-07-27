@@ -13,7 +13,7 @@ export class TaxDetails extends React.Component {
 
         this.setTaxResident = (event) => {
             console.log(event.target.value);
-            this.state.isTaxResident = event.target.value;
+            this.setState({isTaxResident : event.target.value});
         }
     }
 

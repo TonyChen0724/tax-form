@@ -26,7 +26,7 @@ export class CountryAndTax extends React.Component {
         console.log(this.state.countryNames);
         let countries = this.props.countryList;
         let createCounryItem = (countryItem, index) => {
-            return <option key={index}>{countryItem.name}</option>;
+            return <option selected={this.props.country.name === countryItem.name} key={index}>{countryItem.name}</option>;
         };
         return (
 
@@ -39,8 +39,12 @@ export class CountryAndTax extends React.Component {
                     {countries.map(createCounryItem)}
                 </select>
                 <label>tax number:</label>
-                <input type="select" value={this.state.value} onChange={this.handleChange} />
-                <br></br>
+                <input type="select" value={this.state.value || this.props.country.value} onChange={this.handleChange} />
+                <button onClick={() => {
+                    console.log();
+                    this.props.onCountryDeleted(this.props.countryIndex);
+                }}>Delete</button>
+                <br />
 
             </div>
         );

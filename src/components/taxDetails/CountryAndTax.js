@@ -22,27 +22,44 @@ export class CountryAndTax extends React.Component {
         event.preventDefault();
     }
 
+    updateTaxCountries = (countries, selectedCountries, currentCountryName) => {
+        return countries.filter((country) => {
+            if (country.name === currentCountryName) {
+                return true;
+            }
+            const exist = selectedCountries.find((selectedCountry) => {
+                return selectedCountry.name === country.name;
+            });
+            return !exist;
+        });
+    }
+
     render() {
         console.log(this.state.countryNames);
-        let countries = this.props.countryList;
+
+        const { countryList, selectedCountries, country, onCountryDeleted, countryIndex, onCountryChanged } = this.props;
+        let countries = countryList;
+
+        const countryOptions = this.updateTaxCountries(countries, selectedCountries, country.name);
+
         let createCounryItem = (countryItem, index) => {
-            return <option selected={this.props.country.name === countryItem.name} key={index}>{countryItem.name}</option>;
+            return <option selected={country.name === countryItem.name} key={index}>{countryItem.name}</option>;
         };
         return (
 
             <div>
-                <label>default country: {this.props.defaultCountry}</label>
                 <select name="countrylist" onChange={(event) => {
                     let selectedValue = event.target.value;
-                    this.props.onCountryChanged(selectedValue, this.props.countryIndex);
+                    onCountryChanged(selectedValue, countryIndex);
                 }}>
-                    {countries.map(createCounryItem)}
+                    {!this.props.country.name && <option>please select:</option>}
+                    {countryOptions.map(createCounryItem)}
                 </select>
                 <label>tax number:</label>
                 <input type="select" value={this.state.value || this.props.country.value} onChange={this.handleChange} />
                 <button onClick={() => {
                     console.log();
-                    this.props.onCountryDeleted(this.props.countryIndex);
+                    onCountryDeleted(countryIndex);
                 }}>Delete</button>
                 <br />
 

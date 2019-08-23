@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import { CountryAndTax } from './CountryAndTax';
+import { connect } from 'react-redux';
+import { createTaxCountriesLoadedAction } from '../../reduxStore/taxDetails/taxActions';
+
 export class TaxDetails extends React.Component {
     constructor(args) {
         super(args);
@@ -23,13 +26,15 @@ export class TaxDetails extends React.Component {
         axios.get('https://restcountries.eu/rest/v2/all').then(
             (response) => {
                 console.log(response);
-                this.setState({ countries: response.data, selectedCountries: [{}] });
+                // this.setState({ countries: response.data, selectedCountries: [{}] });
+                this.props.taxCountryLoaded(response.data);
             }
         ).catch(
             (e) => {
                 console.error(e);
             }
         );
+        // this.setState({ countries })
     }
 
     ageChanged = (event) => {
@@ -46,7 +51,9 @@ export class TaxDetails extends React.Component {
     }
 
     render() {
-        console.log('selectedCountries: ' + JSON.stringify(this.state.selectedCountries));
+        console.log('countries: ' + JSON.stringify(this.state.countries));
+
+        console.log('country list from redux store: ' + JSON.stringify(this.props.countries));
 
         return <div>
             <p>Are you a tax resident: </p>
@@ -126,3 +133,13 @@ export class TaxDetails extends React.Component {
         </div>
     }
 }
+const mapStateToProps = (reduxState) => {
+    return { ...reduxState };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        taxCountryLoaded: (countryList) => { dispatch(createTaxCountriesLoadedAction(countryList)) },
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaxDetails);
